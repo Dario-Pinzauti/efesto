@@ -1,0 +1,46 @@
+
+
+	----------- Query constant ---------------------
+
+	INSERT INTO m_cons_constants (cons_id, cons_key, cons_name)
+	SELECT nextval('seq_cons'),
+		   '{{key}}',
+		   NULL WHERE NOT EXISTS
+		(SELECT m_cons_constants.cons_id
+		FROM m_cons_constants
+		WHERE m_cons_constants.cons_key = '{{key}}' );
+	
+	
+	INSERT INTO m_cons_constants_i18n
+	SELECT nextval('seq_consi18n')
+		 , '{{it}}'
+		 , c.cons_id
+		 , (SELECT m_loca_locales.loca_id FROM m_loca_locales WHERE m_loca_locales.loca_code = 'IT')
+	FROM m_cons_constants c
+	WHERE c.cons_key = '{{key}}'
+	  AND NOT EXISTS
+		(SELECT m_cons_constants_i18n.cons_id
+		 FROM m_cons_constants_i18n
+		 WHERE m_cons_constants_i18n.cons_id =
+			   (SELECT c.cons_id
+				FROM m_cons_constants c
+				WHERE c.cons_key = '{{key}}')
+		   AND m_cons_constants_i18n.cons_locale =
+			   (SELECT m_loca_locales.loca_id FROM m_loca_locales WHERE m_loca_locales.loca_code = 'IT'));
+	
+	INSERT INTO m_cons_constants_i18n
+	SELECT nextval('seq_consi18n')
+		 , '{{en}}'
+		 , c.cons_id
+		 , (SELECT m_loca_locales.loca_id FROM m_loca_locales WHERE m_loca_locales.loca_code = 'EN')
+	FROM m_cons_constants c
+	WHERE c.cons_key = '{{key}}'
+	  AND NOT EXISTS
+		(SELECT m_cons_constants_i18n.cons_id
+		 FROM m_cons_constants_i18n
+		 WHERE m_cons_constants_i18n.cons_id =
+			   (SELECT c.cons_id
+				FROM m_cons_constants c
+				WHERE c.cons_key = '{{key}}')
+		   AND m_cons_constants_i18n.cons_locale =
+			   (SELECT m_loca_locales.loca_id FROM m_loca_locales WHERE m_loca_locales.loca_code = 'EN'));
