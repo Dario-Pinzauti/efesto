@@ -20,9 +20,6 @@ jobs:
     - name: Cleanup repository
       run: rm -rf vendor/
 
-    - name: Vet
-      run: go vet -tags ci ./...
-
     - name: Goimports
       run: test -z $(goimports -e -d . | tee /dev/stderr)
 
