@@ -25,7 +25,7 @@ func CloseFile(name string) {
 }
 
 func PrepareScriptFolder(namePath string) ([]db.Form, []*db.Database) {
-	outputDirRead, _ := os.Open("templates/" + namePath)
+	outputDirRead, _ := os.Open(config.EfestoConf.DefaultPath + "/templates/" + namePath)
 	var dbArr []*db.Database
 	var formArray []db.Form
 	// Call Readdir to get all files.
@@ -39,7 +39,7 @@ func PrepareScriptFolder(namePath string) ([]db.Form, []*db.Database) {
 		// Get name of file.
 		outputNameHere := outputFileHere.Name()
 		if outputFileHere.Name() == "form" {
-			formFile, _ := os.Open("templates/" + namePath + "/" + outputNameHere)
+			formFile, _ := os.Open(config.EfestoConf.DefaultPath + "/templates/" + namePath + "/" + outputNameHere)
 			defer formFile.Close()
 			byteValue, _ := ioutil.ReadAll(formFile)
 			json.Unmarshal(byteValue, &formArray)
@@ -47,7 +47,7 @@ func PrepareScriptFolder(namePath string) ([]db.Form, []*db.Database) {
 			//creare oggetto lista db e form
 		}
 
-		dbArr = append(dbArr, db.NewDatabase(outputFileHere.Name(), "templates/"+namePath+"/"+outputFileHere.Name()))
+		dbArr = append(dbArr, db.NewDatabase(outputFileHere.Name(), config.EfestoConf.DefaultPath+"/templates/"+namePath+"/"+outputFileHere.Name()))
 
 		// Print name.
 		fmt.Println(outputNameHere)

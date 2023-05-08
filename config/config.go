@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	efestoerrors "script/query_script/efesto_errors"
 )
 
@@ -67,7 +68,7 @@ func initEfestoConfig() *efestoerrors.EfestoError {
 }
 
 func initDbConfig() *efestoerrors.EfestoError {
-	path := EfestoConf.DefaultPath + "/templates/config"
+	path := filepath.FromSlash(EfestoConf.DefaultPath + "/templates/config")
 	c, err := os.Open(path)
 
 	if err != nil {

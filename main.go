@@ -7,11 +7,13 @@ import (
 
 func main() {
 
-	preapareGui()
 	err := config.InitConfig()
-	if err != nil {
 
+	preapareGui()
+	if err != nil {
+		gui.PrintError(err)
 	}
+
 	runGui()
 }
 
