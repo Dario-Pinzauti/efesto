@@ -23,7 +23,6 @@ jobs:
 
     - name: Install dependencies
       run: |
-        go mod tidy
         go get .
         go get fyne.io/fyne/v2@latest
   
