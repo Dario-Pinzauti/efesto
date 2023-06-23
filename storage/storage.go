@@ -6,6 +6,14 @@ import (
 	"os"
 )
 
+func FileExist(dbDefaultFileName string, logger *log.Logger) bool {
+	info, err := os.Stat(dbDefaultFileName)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 func CreateNewFile(dbDefaultFileName string, logger *log.Logger) {
 	f, err := os.Create(dbDefaultFileName)
 	if err != nil {

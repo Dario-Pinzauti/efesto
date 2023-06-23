@@ -18,6 +18,18 @@ func CreateNewFileAction() {
 
 }
 
+func FileActionWasCreated() bool {
+	var isCreated bool = false
+	for _, v := range config.Conf.Databases {
+		isCreated = storage.FileExist(v, config.Logger)
+		if isCreated {
+			return true
+		}
+	}
+	return false
+
+}
+
 func CloseFile(name string) {
 	for _, v := range config.Conf.Databases {
 		storage.CloseFile(name+"_"+v+".sql", v, config.Logger)

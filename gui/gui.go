@@ -15,6 +15,7 @@ import (
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"fyne.io/fyne/container"
+	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 )
 
@@ -26,7 +27,7 @@ func InitGui() {
 	logger = log.Default()
 	logger.SetPrefix("GUI")
 	myApp = app.New()
-	myWindow = myApp.NewWindow("Choice Widgets")
+	myWindow = myApp.NewWindow("Efesto")
 	FirstMenu()
 	myWindow.Resize(fyne.NewSize(500, 500))
 	myWindow.ShowAndRun()
@@ -39,7 +40,7 @@ func PrintError(e *efestoerrors.EfestoError) {
 
 func FirstMenu() {
 	var selectValue string
-
+	isCreated := fileactions.FileActionWasCreated()
 	button := widget.NewButton("next", func() {
 		formWindow(selectValue)
 	})
@@ -49,7 +50,9 @@ func FirstMenu() {
 	buttonCloseFile := widget.NewButton("close file", func() {
 		closeFileWindow()
 	})
-
+	if !isCreated {
+		buttonCloseFile.Disable()
+	}
 	button.Disable()
 
 	combo := widget.NewSelect(config.ArrayScripts, func(value string) {
@@ -57,7 +60,7 @@ func FirstMenu() {
 		button.Enable()
 	})
 
-	myWindow.SetContent(container.NewVBox(combo, button, buttonInitFile, buttonCloseFile))
+	myWindow.SetContent(container.NewVBox(combo, button, layout.NewSpacer(), buttonInitFile, buttonCloseFile))
 }
 
 func createNewFileWindow() {
