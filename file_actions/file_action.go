@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"script/query_script/config"
 	"script/query_script/db"
 	"script/query_script/storage"
@@ -13,7 +14,7 @@ import (
 func CreateNewFileAction() {
 
 	for _, v := range config.Conf.Databases {
-		storage.CreateNewFile(v, config.Logger)
+		storage.CreateNewFile(config.EfestoConf.DefaultPath+"/"+v, config.Logger)
 	}
 
 }
@@ -21,7 +22,7 @@ func CreateNewFileAction() {
 func FileActionWasCreated() bool {
 	var isCreated bool = false
 	for _, v := range config.Conf.Databases {
-		isCreated = storage.FileExist(v, config.Logger)
+		isCreated = storage.FileExist(config.EfestoConf.DefaultPath+"/"+v, config.Logger)
 		if isCreated {
 			return true
 		}
@@ -32,12 +33,15 @@ func FileActionWasCreated() bool {
 
 func CloseFile(name string) {
 	for _, v := range config.Conf.Databases {
-		storage.CloseFile(name+"_"+v+".sql", v, config.Logger)
+		storage.CloseFile(config.EfestoConf.DefaultPath+"/"+name+"_"+v+".sql", v, config.Logger)
 	}
 }
 
 func PrepareScriptFolder(namePath string) ([]db.Form, []*db.Database) {
-	outputDirRead, _ := os.Open(config.EfestoConf.DefaultPath + "/templates/" + namePath)
+	dirp := filepath.Dir(config.EfestoConf.DefaultPath + "/templates/" + namePath)
+	filep := filepath.Base(config.EfestoConf.DefaultPath + "/templates/" + namePath)
+
+	outputDirRead, _ := os.Open(filepath.Join(dirp, filep))
 	var dbArr []*db.Database
 	var formArray []db.Form
 	// Call Readdir to get all files.
@@ -51,7 +55,9 @@ func PrepareScriptFolder(namePath string) ([]db.Form, []*db.Database) {
 		// Get name of file.
 		outputNameHere := outputFileHere.Name()
 		if outputFileHere.Name() == "form" {
-			formFile, _ := os.Open(config.EfestoConf.DefaultPath + "/templates/" + namePath + "/" + outputNameHere)
+			dirp := filepath.Dir(config.EfestoConf.DefaultPath + "/templates/" + namePath + "/" + outputNameHere)
+			filep := filepath.Base(config.EfestoConf.DefaultPath + "/templates/" + namePath + "/" + outputNameHere)
+			formFile, _ := os.Open(filepath.Join(dirp, filep))
 			defer formFile.Close()
 			byteValue, _ := ioutil.ReadAll(formFile)
 			json.Unmarshal(byteValue, &formArray)

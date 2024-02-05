@@ -29,8 +29,16 @@ func InitGui() {
 	myApp = app.New()
 	myWindow = myApp.NewWindow("Efesto")
 	FirstMenu()
+	r, _ := fyne.LoadResourceFromPath("./EFESTO.png")
+	myWindow.SetIcon(r)
 	myWindow.Resize(fyne.NewSize(500, 500))
+	myWindow.SetMaster()
+	myWindow.SetCloseIntercept(fyne.CurrentApp().Quit)
+	myWindow.SetOnClosed(func() {
+		os.Exit(0)
+	})
 	myWindow.ShowAndRun()
+
 }
 
 func PrintError(e *efestoerrors.EfestoError) {
@@ -120,7 +128,7 @@ func formWindow(value string) {
 				byteValue = bytes.Replace(byteValue, []byte(stringForReplace(key)), []byte(val), -1)
 
 			}
-			storage.AppendInFile(string(byteValue), v.DbName, logger)
+			storage.AppendInFile(string(byteValue), config.EfestoConf.DefaultPath+"/"+v.DbName, logger)
 
 		}
 

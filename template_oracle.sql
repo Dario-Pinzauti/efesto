@@ -1,0 +1,1 @@
+ALTER TABLE m_actn_action RENAME COLUMN actn_multiple_account TO actn_multiple_account_to_delete;

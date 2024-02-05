@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -70,7 +71,6 @@ func initEfestoConfig() *efestoerrors.EfestoError {
 func initDbConfig() *efestoerrors.EfestoError {
 	path := filepath.FromSlash(EfestoConf.DefaultPath + "/templates/config")
 	c, err := os.Open(path)
-
 	if err != nil {
 		return &efestoerrors.EfestoError{Text: "format error in file " + path}
 
@@ -81,6 +81,7 @@ func initDbConfig() *efestoerrors.EfestoError {
 	byteValue, err := ioutil.ReadAll(c)
 	json.Unmarshal(byteValue, &Conf)
 
+	fmt.Println(Conf)
 	if err != nil {
 		return &efestoerrors.EfestoError{Text: "format error in file " + path}
 

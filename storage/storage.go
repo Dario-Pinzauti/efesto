@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 func FileExist(dbDefaultFileName string, logger *log.Logger) bool {
-	info, err := os.Stat(dbDefaultFileName)
+	filep := filepath.Dir(dbDefaultFileName)
+	info, err := os.Stat(filep)
 	if os.IsNotExist(err) {
 		return false
 	}
@@ -15,7 +17,10 @@ func FileExist(dbDefaultFileName string, logger *log.Logger) bool {
 }
 
 func CreateNewFile(dbDefaultFileName string, logger *log.Logger) {
-	f, err := os.Create(dbDefaultFileName)
+
+	dirp := filepath.Dir(dbDefaultFileName)
+	filep := filepath.Base(dbDefaultFileName)
+	f, err := os.Create(filepath.Join(dirp, filep))
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -32,7 +37,10 @@ func ArrayContains(sl []string, name string) bool {
 }
 
 func AppendInFile(s string, dbDefaultFileName string, logger *log.Logger) {
-	f, err := os.OpenFile(dbDefaultFileName, os.O_APPEND|os.O_WRONLY, 0644)
+
+	dirp := filepath.Dir(dbDefaultFileName)
+	filep := filepath.Base(dbDefaultFileName)
+	f, err := os.OpenFile(filepath.Join(dirp, filep), os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		logger.Fatal(err)
 		return
@@ -46,7 +54,9 @@ func AppendInFile(s string, dbDefaultFileName string, logger *log.Logger) {
 }
 
 func ReadFile(dbDefaultFileName string, logger *log.Logger) []byte {
-	f, err := os.ReadFile(dbDefaultFileName)
+	dirp := filepath.Dir(dbDefaultFileName)
+	filep := filepath.Base(dbDefaultFileName)
+	f, err := os.ReadFile(filepath.Join(dirp, filep))
 
 	if err != nil {
 		logger.Fatal(err)
@@ -57,8 +67,9 @@ func ReadFile(dbDefaultFileName string, logger *log.Logger) []byte {
 }
 
 func CloseFile(name string, dbDefaultFileName string, logger *log.Logger) {
-
-	e := os.Rename(dbDefaultFileName, name)
+	dirp := filepath.Dir(dbDefaultFileName)
+	filep := filepath.Base(dbDefaultFileName)
+	e := os.Rename(filepath.Join(dirp, filep), name)
 
 	if e != nil {
 		logger.Fatal(e)
